@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Token</title>
+</head>
+<body>
+    <h1>Access Token</h1>
+    <p id="message">Processing...</p>
+    <script>
+        const clientId = '136889'; // Your Strava client ID
+        const clientSecret = '965e30fa3ac626ee90d757a1d48d147fc80ed035'; // Replace with your Strava client secret
+        const redirectUri = 'http://localhost/callback.html'; // Callback URL
+        const message = document.getElementById('message');
+
+        // Extract the authorization code from the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+
+        if (code) {
+            message.textContent = 'Authorization successful! Fetching access token...';
+
+            // Exchange the authorization code for an access token
+            fetch('https://www.strava.com/oauth/token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    code: code,
+                    grant_type: 'authorization_code'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access_token) {
+                    message.textContent = `Access Token: ${data.access_token}`;
+                    console.log('Access Token:', data.access_token); // You can also log it to the console if needed
+                } else {
+                    message.textContent = 'Failed to fetch access token.';
+                }
+            })
+            .catch(error => {
+                message.textContent = 'Error: ' + error.message;
+            });
+        } else {
+            message.textContent = 'Authorization code not found.';
+        }
+    </script>
+</body>
+</html>

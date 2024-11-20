@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strava OAuth Authorization</title>
+</head>
+<body>
+    <h1>Strava Authorization</h1>
+    <button id="authorize">Authorize App</button>
+    <p id="message"></p>
+    <script>
+        const clientId = '136889'; // Your Strava client ID
+        const redirectUri = 'http://localhost/callback.html'; // Callback URL
+        const scope = 'activity:read';
+
+        const authorizeButton = document.getElementById('authorize');
+        const message = document.getElementById('message');
+
+        // Redirect to Strava for authorization
+        authorizeButton.addEventListener('click', () => {
+            const authUrl = `https://www.strava.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${scope}`;
+            window.location.href = authUrl;
+        });
+    </script>
+</body>
+</html>
