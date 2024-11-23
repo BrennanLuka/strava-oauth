@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Token</title>
+    <title>Access and Refresh Token</title>
 </head>
 <body>
-    <h1>Access Token</h1>
+    <h1>Access and Refresh Token</h1>
     <p id="message">Processing...</p>
     <script>
         const clientId = '136889'; // Your Strava client ID
@@ -19,9 +19,9 @@
         const code = urlParams.get('code');
 
         if (code) {
-            message.textContent = 'Authorization successful! Fetching access token...';
+            message.textContent = 'Authorization successful! Fetching tokens...';
 
-            // Exchange the authorization code for an access token
+            // Exchange the authorization code for tokens
             fetch('https://www.strava.com/oauth/token', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -34,11 +34,16 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.access_token) {
-                    message.textContent = `Access Token: ${data.access_token}`;
-                    console.log('Access Token:', data.access_token); // You can also log it to the console if needed
+                if (data.access_token && data.refresh_token) {
+                    message.innerHTML = `
+                        <p><strong>Access Token:</strong> ${data.access_token}</p>
+                        <p><strong>Refresh Token:</strong> ${data.refresh_token}</p>
+                        <p><strong>Expires In (seconds):</strong> ${data.expires_in}</p>
+                    `;
+                    console.log('Access Token:', data.access_token);
+                    console.log('Refresh Token:', data.refresh_token);
                 } else {
-                    message.textContent = 'Failed to fetch access token.';
+                    message.textContent = 'Failed to fetch tokens.';
                 }
             })
             .catch(error => {
